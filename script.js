@@ -5,11 +5,11 @@ let gridSize = 16;
 
 function reset() {
     let allCells = document.querySelectorAll(".cell");
-    allCells.forEach(cell => cell.style.backgroundColor="FFFFFF");
+    allCells.forEach(cell => cell.style.backgroundColor="#FFFFFF");
 }
 
 function setGridSize(size) {
-    let e = document.getElementById("gridSizr");
+    let e = document.getElementById("gridSize");
     size = e.options[e.selectedIndex].value;
     gridSize = size;
     remove();
