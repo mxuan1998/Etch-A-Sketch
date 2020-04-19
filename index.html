@@ -8,14 +8,23 @@
   </head>
   <body>
     
-    <div class="container"></div>
     <h1 class="title">Etch-A-Sketch</h1>
 
-    <div class="appButtons">
-        <button class="gridSize">Grid size</button>
-        <button class="randomColor">Random color</button>
-        <button class=resetButton>Reset</button>
+    <div class="buttons">
+        <select class="gridSize" id="gridSize" onclick="setGridSize()">
+            <option value="16">16x16</option>
+            <option value="32">32x32</option>
+            <option value="64">64x64</option>
+            <option value="128">128x128</option>
+        </select>
+
+        <button onclick="autoFill()">Auto</button>
+        <button class="reset" onclick="reset()">Reset</button>
+        <button class="random" onclick="setRandomIsClicked()">Random Colors</button>
+        <button class="black" onclick="black()">Black</button>
     </div>
+
+    <div id="container" class="container"></div>
 
     <script type="text/javascript" src="script.js"></script>
 

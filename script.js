@@ -1,81 +1,92 @@
-const container = document.querySelector(".container");
-const parentBlock = document.createElement("div");
-let initialGridSize = 16;
-const appButtons = document.querySelector(".appButtons");
-let isRandomOn = false;
+const RGB = "0123456789abcdef";
+let randomIsClicked = false;
+let blackIsClicked = true;
+let gridSize = 16;
 
-function createParentBlock(size) {
-    parentBlock.setAttribute("class", "parent-block");
-    parentBlock.style.display = "grid";
-    parentBlock.style.gridTemplateColumns = `repeat(${size}, 1fr)`；
-    parentBlock.style.gridTemplateRows = `repeat(${size}, 1fr)`；
-    container.appendChild(parentBlock);
+function reset() {
+    let allCells = document.querySelectorAll(".cell");
+    allCells.forEach(cell => cell.style.backgroundColor="FFFFFF");
 }
 
-function createChildrenBlock(size) {
-    for (let i=0; i<size; i++) {
-        const childBlock = document.createElement("div");
-        childBlock.setAttribute("class", "child-block");
-        childBlock.setAttribute("isHovered", "false");
-        childBlock.style.filter = "brightness(100%)";
-        parentBlock.appendChild(childBlock);
+function setGridSize(size) {
+    let e = document.getElementById("gridSizr");
+    size = e.options[e.selectedIndex].value;
+    gridSize = size;
+    remove();
+    generate(size);
+}
+
+function remove() {
+    const container = document.getElementById("container");
+    let allCells = document.querySelectorAll(".cell");
+    allCells.forEach(cell => container.removeChild(cell));
+}
+
+function generate(gridSize) {
+    let cellSize = 512 / gridSize;
+    const container = document.getElementById("container");
+    for (let i=1; i<=gridSize; i++) {
+        for (let j=1; j<=gridSize; j++) {
+            const div = document.createElement("div");
+            div.className="cell";
+            div.style.width = `${cellSize}px`;
+            div.style.height = `${cellSize}px`;
+            container.appendChild(div);
+        }
     }
-    setColorOnHover();
+    changeColor();
 }
 
-function setColorOnHover() {
-    const childBlockArr = document.querySelectorAll(".child-block");
-    childBlockArr.forEach(e) => {
-        e.addEventListener("mouseover", () => {
-            console.log(isRandomOn == true && e.getAttribute("isHovered") == "false");
-            if (isRandomOn == false) {
-                e.style.background = "black";
-            } else if (isRandomOn == true && e.getAttribute("isHovered") == "false") {
-                let randomColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
-                e.style.background = randomColor;
-                e.setAttribute("isHovered", "true");
-            } else {
-                let brightness = parseInt(e.style.filter.match(/\d+));
-                e.style.filter = `brightness(${brightness - 10}%)`
-            }
-        });
-    })
-}
-
-function resetGame() {
-    while(parentBlock.hasChildNodes()) {
-        parentBlock.removeChild(parentBlock.firstChild);
+function autoFill() {
+    for (let i=0; i<gridSize; i++) {
+        let allCells = document.querySelectorAll(".cell");
+        allCells.forEach(cell => cell.style.backgroundColor = `${randomColor()}`);
     }
 }
 
-function getInput() {
-    do {
-        initialGridSize = parseInt(prompt("How many squares per side for the new grid? (Numbers only)"), 10);
-    } while (isNaN(parseInt(initialGridSize, 10)))
-}
-
-appButtons.addEventListener("click", (e) => {
-    resetGame();
-    switch (e.target.className) {
-        case "gridSize":
-            getInput();
-            createParentBlock(initialGridSize);
-            break;
-        case "randomColor":
-            isRandomOn = true;
-            break;
-        case "resetButton":
-            isRandomOn = false;
-            break;
-        default: 
-            console.log("Invalid input.");
+function changeColor() {
+    let allCells = document.querySelectorAll(".cell");
+    if(randomIsClicked == true) {
+        allCells.forEach(cell => cell.addEventListener("mouseenter", function() {
+            cell.style.backgroundColor = `${randomColor()}`;
+        }));
+        allCells.forEach(cell => cell.addEventListener("mouseleave", function() {
+            cell.style.backgroundColor = `${randomColor()}`;
+        }));
+        allCells.forEach(cell => cell.addEventListener("mouseover", function() {
+            cell.style.backgroundColor = `${randomColor()}`;
+        }));
+    } else {
+        allCells.forEach(cell => cell.addEventListener("mouseenter", function() {
+            cell.style.backgroundColor = "#000000";
+        }));
+        allCells.forEach(cell => cell.addEventListener("mouseleave", function() {
+            cell.style.backgroundColor = "#000000";
+        }));
+        allCells.forEach(cell => cell.addEventListener("mouseover", function() {
+            cell.style.backgroundColor = "#000000";
+        }));
     }
-    createChildrenBlock(initialGridSize);
-});
-
-function gameInit() {
-    createParentBlock(initialGridSize);
-    createChildrenBlock(initialGridSize);
 }
 
-gameInit();
+function randomColor() {
+    let myRGB = "#";
+    for (i=0; i<6; i++){
+        myRGB += RGB[Math.floor(Math.random() * 16)];
+    }
+    return myRGB;
+}
+
+function setRandomIsClicked() {
+    randomIsClicked = true;
+    changeColor();
+}
+
+function black() {
+    blackIsClicked = true;
+    randomIsClicked = false;
+    changeColor();
+}
+
+generate(gridSize);
+changeColor();
