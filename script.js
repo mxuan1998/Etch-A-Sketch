@@ -1,7 +1,7 @@
-const container = document.querySelector("#container");
+const container = document.querySelector(".container");
 const parentBlock = document.createElement("div");
 let initialGridSize = 16;
-const appButtons = document.querySelector("#appButtons");
+const appButtons = document.querySelector(".appButtons");
 let isRandomOn = false;
 
 function createParentBlock(size) {
@@ -26,18 +26,20 @@ function createChildrenBlock(size) {
 function setColorOnHover() {
     const childBlockArr = document.querySelectorAll(".child-block");
     childBlockArr.forEach(e) => {
-        console.log(isRandomOn == true && e.getAttribute("isHovered") == "false");
-        if (isRandomOn == false) {
-            e.style.background = "black";
-        } else if (isRandomOn == true && e.getAttribute("isHovered") == "false") {
-            let randomColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
-            e.style.background = randomColor;
-            e.setAttribute("isHovered", "true");
-        } else {
-            let brightness = parseInt(e.style.filter.match(/\d+));
-            e.style.filter = `brightness(${brightness - 10}%)`
-        }
-    }
+        e.addEventListener("mouseover", () => {
+            console.log(isRandomOn == true && e.getAttribute("isHovered") == "false");
+            if (isRandomOn == false) {
+                e.style.background = "black";
+            } else if (isRandomOn == true && e.getAttribute("isHovered") == "false") {
+                let randomColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+                e.style.background = randomColor;
+                e.setAttribute("isHovered", "true");
+            } else {
+                let brightness = parseInt(e.style.filter.match(/\d+));
+                e.style.filter = `brightness(${brightness - 10}%)`
+            }
+        });
+    })
 }
 
 function resetGame() {
@@ -55,18 +57,18 @@ function getInput() {
 appButtons.addEventListener("click", (e) => {
     resetGame();
     switch (e.target.className) {
-        case "generate-block":
+        case "gridSize":
             getInput();
             createParentBlock(initialGridSize);
             break;
-        case "random-button":
+        case "randomColor":
             isRandomOn = true;
             break;
-        case "clear-button":
+        case "resetButton":
             isRandomOn = false;
             break;
         default: 
-            console.log("Invalid input");
+            console.log("Invalid input.");
     }
     createChildrenBlock(initialGridSize);
 });
